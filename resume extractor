@@ -1,0 +1,125 @@
+import anthropic
+import os 
+import json
+
+
+client = anthropic.Anthropic(
+    # defaults to os.environ.get("ANTHROPIC_API_KEY")
+    api_key="",
+)
+
+
+resume_text =  """ 
+PRATIK REDDY
+Associate Analyst, Data Science.
+Contact Address
+Bengaluru, India 560022
+Phone
++91-7406056171
+E-mail
+Ps41066@gmail.com
+WWW
+https://bold.pro/my/6d2c- 221121213952/763
+Skills
+Automation - Proficient in Python based RPA development for repetitive tasks.
+Advanced
+ETL Pipelines - Skilled at creating efficient data integration through ETL pipelines, ensuring seamless data flow and accurate analysis.
+Advanced Data Integrity Assurance
+Upper intermediate
+Relaying Complex Information
+Upper intermediate
+      Passionate learner aspiring to work in a globally challenging environment. Skilled in process optimization, automation, database management, and analytics. Aiming to innovate and implement new ideas for organizational value and professional growth.
+Work History
+2023-01 - Current
+  2019-02 - 2019-05
+ASSOCIATE ANALYST
+EOX VANTAGE, Bangalore
+RPA Development: Python-based automation for repetitive tasks and processes.
+ETL jobs: Talend and N8N for ETL processes.
+VBA Scripting: Automating Excel processes for data transformation and manipulation (RPA and ETL). Sentiment Analysis: Extracting and analyzing opinions and emotions from text data and other feedback loops. Azure Document Intelligence: Advanced document extraction.
+Premium Rating Model Development: Building models to predict insurance premiums based on policy endorsement data.
+QR Code Generation: Automating QR code generation for task management and tracking.
+AI-powered Automation: Leveraging GPT API , Claude API, Mistral API for KPO automation.
+Key Highlights:
+Streamlined data scraping and analysis for storage tank details, enhancing client efficiency.
+Automated insurance premium calculations, reducing manual processing time and errors.
+Efficient data integration through ETL pipelines, ensuring seamless data flow for accurate analysis.
+SUPPLY CHAIN ANALYST INTERN
+JUST BAKE, Bangalore
+Studied movement of goods to identify gaps in efficiency Analyzed statistical data and reports to determine trends Managed inventory levels to maximize order fill rates.
+Key Account Manager
+ORCAD - INTERN, Bangalore
+Assisted with projects involving multiple stakeholder management
+Collaborated with senior management on new initiatives.
+ Education
+ 
+ Masters in Business Administration
+INDIANA UNIVERSITY OF PENNSYLVANIA - Pennsylvania
+Bachelors of Business Administration
+PES UNIVERSITY HRAMAATRA ACADEMY - Bangalore
+Online
+Udemy, Google Skill Shop And Coursera
+UDEMY
+Python Course
+ETL course (TALEND) (Level 1)
+Azure cognitive services course (ADVANCE) GPT API course (ADVANCE)
+SQL Course
+GOOGLE SKILLSHOP
+Google Ads Display Certification
+Google Ads - Measurement Certification
+Accomplishments
+All India football federation licensed coach. Ar photography.
+Additional Information
+Building web3 dashboards using Dune Analytics and SQL. VR video creation and generation.
+YouTube Data & Mapping: Integrating YouTube API data and mapping it to Google
+Maps API for insightful spatial visualization.
+MP4 Subtitling with GPT Whisper: Automating subtitle generation for MP4 videos using
+the GPT API Whisper model.
+RPA Finance Tracker: Tailoring an RPA solution for last-mile delivery apps, automating.
+financial tracking and reporting.
+VR video and LIDAR data integration for depth analysis and object addition to MP4.
+GPT4 Premium bots.
+2020-01 - 2021-08
+2017-07 - 2019-05
+     """ # Insert your resume text here
+
+file_name = "resume 1"
+
+expected_output = {
+  f"{file_name}": {
+    "name": "",
+    "phone": "",
+    "email": "",
+    "address": "",
+    "latest_experience": "",
+    "skills": "",
+    "certifications": "",
+    "summary": ""
+  }
+}
+
+
+message = client.messages.create(
+    model="claude-3-sonnet-20240229",
+    max_tokens=1000,
+    temperature=0,
+    system= f"""
+    extract the relevant required data and fill my expected output json keys with values from the inputted text
+    resume extract = {resume_text}
+    expected output = {expected_output}
+    JSON output only. dont add any filler content like Here is the expected output in JSON format
+    """,
+    messages=[
+        {
+            "role": "user",
+            "content": "{",
+        }
+    ]
+)
+print(message.content)
+
+# Extracting the JSON string from the message
+content = content = message.content[0].text 
+result = json.loads(content)
+formatted_json = json.dumps(result, indent=4)
+print(formatted_json)
